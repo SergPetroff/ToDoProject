@@ -19,7 +19,7 @@ namespace PetProject.Controllers
         }
         [HttpGet]
 
-        public async Task<IActionResult> GetTodos()
+        public async Task<IActionResult> GetAll()
         {
             return Ok(await _dbContext.Todos.ToListAsync());
         }
