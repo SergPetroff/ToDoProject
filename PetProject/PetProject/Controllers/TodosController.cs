@@ -11,17 +11,17 @@ namespace PetProject.Controllers
     public class TodosController : ControllerBase
     {
 
-        private TodoDBContext dbContext;
+        private TodoDBContext _dbContext;
         public TodosController(TodoDBContext dbContext)
         {
-            this.dbContext = dbContext;
+            this._dbContext = dbContext;
 
         }
         [HttpGet]
 
         public async Task<IActionResult> GetTodos()
         {
-            return Ok(await dbContext.Todos.ToListAsync());
+            return Ok(await _dbContext.Todos.ToListAsync());
         }
 
         [HttpPost]
@@ -33,8 +33,8 @@ namespace PetProject.Controllers
                 Title = addTodoRequest.Title,
                 Description = addTodoRequest.Description,
             };
-            await dbContext.Todos.AddAsync(todo);
-            await dbContext.SaveChangesAsync();
+            await _dbContext.Todos.AddAsync(todo);
+            await _dbContext.SaveChangesAsync();
 
             return Ok(todo);
         }
@@ -43,7 +43,7 @@ namespace PetProject.Controllers
         [Route("{id:guid}")]
         public async Task<IActionResult> GetTodo([FromRoute] Guid id)
         {
-            var todo = await dbContext.Todos.FindAsync(id);
+            var todo = await _dbContext.Todos.FindAsync(id);
             if (todo == null)
             {
                 return NotFound();
@@ -55,13 +55,13 @@ namespace PetProject.Controllers
         [Route("{id:guid}")]
         public async Task<IActionResult> UpdateTodo([FromRoute] Guid id, UpdateTodoRequest updatetodo)
         {
-            var todo = await dbContext.Todos.FindAsync(id);
+            var todo = await _dbContext.Todos.FindAsync(id);
             if (todo != null)
             {
                 todo.Title = updatetodo.Title;
                 todo.Description = updatetodo.Description;
                 todo.IsDone = updatetodo.IsDone;
-                await dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
                 return Ok(todo);
             }
 
