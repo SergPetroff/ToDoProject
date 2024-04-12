@@ -41,7 +41,7 @@ namespace PetProject.Controllers
 
         [HttpGet]
         [Route("{id:guid}")]
-        public async Task<IActionResult> GetTodo([FromRoute] Guid id)
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var todo = await _dbContext.Todos.FindAsync(id);
             if (todo == null)
@@ -53,19 +53,20 @@ namespace PetProject.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
-        public async Task<IActionResult> UpdateTodo([FromRoute] Guid id, UpdateTodoRequest updatetodo)
+        public async Task<IActionResult> Update([FromRoute] Guid id, UpdateTodoRequest updatetodo)
         {
             var todo = await _dbContext.Todos.FindAsync(id);
-            if (todo != null)
+            if (todo == null)
             {
-                todo.Title = updatetodo.Title;
-                todo.Description = updatetodo.Description;
-                todo.IsDone = updatetodo.IsDone;
-                await _dbContext.SaveChangesAsync();
-                return Ok(todo);
+                return NotFound();
             }
+            todo.Title = updatetodo.Title;
+            todo.Description = updatetodo.Description;
+            todo.IsDone = updatetodo.IsDone;
+            await _dbContext.SaveChangesAsync();
+            return Ok(todo);
 
-            return NotFound();
+
 
         }
 
