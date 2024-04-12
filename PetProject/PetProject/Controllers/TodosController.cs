@@ -25,7 +25,7 @@ namespace PetProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddTodo(AddTodoRequest addTodoRequest)
+        public async Task<IActionResult> Create(AddTodoRequest addTodoRequest)
         {
             var todo = new Todo()
             {
