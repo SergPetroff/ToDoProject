@@ -20,4 +20,8 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\PetProject.Infrastructure\PetProject.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>

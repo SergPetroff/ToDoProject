@@ -1,4 +1,4 @@
-﻿namespace PetProject.Model
+﻿namespace PetProject.Domain
 {
     public class UpdateTodoRequest
     {

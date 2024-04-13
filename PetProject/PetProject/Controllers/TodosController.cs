@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PetProject.Data;
-using PetProject.Model;
+using PetProject.Infrastructure;
+using PetProject.Domain;
 
 namespace PetProject.Controllers
 {
