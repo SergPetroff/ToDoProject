@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetProject.Infrastructure;
 using PetProject.Domain;
+using PetProject.API.Contracts;
 
-namespace PetProject.Controllers
+namespace PetProject.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,7 +15,7 @@ namespace PetProject.Controllers
         private TodoDBContext _dbContext;
         public TodosController(TodoDBContext dbContext)
         {
-            this._dbContext = dbContext;
+            _dbContext = dbContext;
 
         }
         [HttpGet]
@@ -25,14 +26,10 @@ namespace PetProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(AddTodoRequest addTodoRequest)
+        public async Task<IActionResult> Create(AddTodoRequest addTodoRequest, CancellationToken ct)
         {
-            var todo = new Todo()
-            {
-                Id = new Guid(),
-                Title = addTodoRequest.Title,
-                Description = addTodoRequest.Description,
-            };
+            var todo = new Todo(new Guid(), addTodoRequest.Title, addTodoRequest.Description, addTodoRequest.IsDone);
+            
             await _dbContext.Todos.AddAsync(todo);
             await _dbContext.SaveChangesAsync();
 
@@ -55,19 +52,15 @@ namespace PetProject.Controllers
         [Route("{id:guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, UpdateTodoRequest updatetodo)
         {
-            var todo = await _dbContext.Todos.FindAsync(id);
-            if (todo == null)
-            {
-                return NotFound();
-            }
-            todo.Title = updatetodo.Title;
-            todo.Description = updatetodo.Description;
-            todo.IsDone = updatetodo.IsDone;
-            await _dbContext.SaveChangesAsync();
-            return Ok(todo);
+            _dbContext.Todos.Where(w => w.Id == id).ExecuteUpdate(updt =>
+                updt
+                    .SetProperty(t => t.Title, updatetodo.Title)
+                    .SetProperty(t => t.Description, updatetodo.Description)
+                    .SetProperty(t => t.IsDone, updatetodo.IsDone)
 
-
-
+            );
+            return Ok();
+           
         }
 
     }
